@@ -32,17 +32,10 @@ app = Flask(__name__)
 
 # get channel_secret and channel_access_token from your environment variable
 # change channel_secret and channel_access_token from your line developer
-channel_secret = os.getenv('LINE_CHANNEL_SECRET', None)
-channel_access_token = os.getenv('LINE_CHANNEL_ACCESS_TOKEN', None)
-if channel_secret is None:
-    print('Specify LINE_CHANNEL_SECRET as environment variable.')
-    sys.exit(1)
-if channel_access_token is None:
-    print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
-    sys.exit(1)
 
-line_bot_api = LineBotApi(channel_access_token)
-handler = WebhookHandler(channel_secret)
+
+line_bot_api = LineBotApi('sdU6WoqJQxsgQPbDpCMb8zDi879mqr1zIOZXOewwkTnBv4hHSnF2GnA2N1v61xAhVaybXC8XQmlygl7SwW6JHS9mssxz+NSjWSAstHlobK1WrU3iQNQsp8RAQuqmaaiypODqMkaQrYQOxYKAZ3W73wdB04t89/1O/w1cDnyilFU=')
+handler = WebhookHandler('d6dae81443d232df5adb786f82f18c1f')
 
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
@@ -77,8 +70,11 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     question = event.message.text
-    answer = request_api(question)
-    line_bot_api.reply_message(event.reply_token, TextSendMessage(text=answer))
+    if(question=='halochatbotdara'):
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text='hai'))
+    else:
+        answer = request_api(question)
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=answer))
 
 def request_api(question):
     url = api_url + api_port + api_route
@@ -94,7 +90,7 @@ def request_api(question):
         except:
             print "Connection timeout..."
             print "Retrying post request..."
-            time.Sleep(1)
+            time.sleep(1)
             continue
     
     response_data = json.JSONDecoder().decode(response_data)
